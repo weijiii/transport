@@ -14,6 +14,7 @@ import io.trino.sql.SqlPath;
 import io.trino.testing.LocalQueryRunner;
 import io.trino.testing.MaterializedResult;
 import io.trino.testing.TestingSession;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,8 @@ import static org.testng.Assert.*;
 
 
 public class TransportPluginTest {
-  private final String udfRepoDir = getClass().getClassLoader().getResource("transport-udf-repo").getPath();
+  private final String udfRepoPath = getClass().getClassLoader().getResource("transport-udf-repo").getFile();
+  private final File udfRepoDir = new File(udfRepoPath);
   private LocalQueryRunner queryRunner;
 
   @BeforeClass
@@ -37,7 +39,7 @@ public class TransportPluginTest {
         ClientCapabilities.values()).map(Enum::toString).collect(ImmutableSet.toImmutableSet())).build();
     queryRunner = LocalQueryRunner.builder(session).withFeaturesConfig(featuresConfig).build();
     queryRunner.installPlugin(new TransportPlugin());
-    queryRunner.createCatalog("LINKEDIN", "transport", ImmutableMap.of("transport.udf.repo", udfRepoDir));
+    queryRunner.createCatalog("LINKEDIN", "transport", ImmutableMap.of("transport.udf.repo", udfRepoPath));
   }
 
   @AfterClass

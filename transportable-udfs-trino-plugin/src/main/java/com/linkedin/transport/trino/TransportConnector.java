@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -97,11 +95,7 @@ public class TransportConnector implements Connector {
   }
 
   private static List<List<URL>> getUDFJarUrls(TransportConfig config) {
-    String udfDir =  config.getTransportUdfRepo();
-    if (!Paths.get(udfDir).isAbsolute()) {
-      Path workingDirPath = Paths.get("").toAbsolutePath();
-      udfDir = Paths.get(workingDirPath.toString(), udfDir).toString();
-    }
+    String udfDir =  config.getTransportUdfRepo().getAbsolutePath();
     File[] udfSubDirs = new File(udfDir).listFiles(File::isDirectory);
     if (udfSubDirs == null) {
       log.error("No Transport UDF are found in " + udfDir);
